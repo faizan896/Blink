@@ -50,9 +50,9 @@ function Home({ onSubmit, onOpen }: { onSubmit: () => void; onOpen: () => void }
 
 function DepthSwitch({ depth, setDepth }: { depth: Depth; setDepth: (d: Depth) => void }) { return <div className="depth" aria-label="Reading depth">{(["15 sec","30 sec","2 min"] as Depth[]).map(d => <button key={d} className={depth === d ? "selected" : ""} onClick={() => setDepth(d)}>{d}</button>)}</div> }
 
-function Result() {
+function Result({ onBack }: { onBack: () => void }) {
   const [depth,setDepth] = useState<Depth>("30 sec"); const [saved,setSaved]=useState(false); const [answer,setAnswer]=useState("");
-  return <main className="result"><div className="resultToolbar"><button className="back">← Back</button><DepthSwitch depth={depth} setDepth={setDepth}/><div><button onClick={()=>setSaved(!saved)}>{saved ? "✓ Saved" : "♡ Save"}</button><button>↗ Share</button></div></div><article>
+  return <main className="result"><div className="resultToolbar"><button className="back" onClick={onBack}>← Back</button><DepthSwitch depth={depth} setDepth={setDepth}/><div><button onClick={()=>setSaved(!saved)}>{saved ? "✓ Saved" : "♡ Save"}</button><button>↗ Share</button></div></div><article>
     <div className="sourceMeta"><div className="sourceIcon">LV</div><div><strong>The Long View</strong><span>thelongview.com</span></div><dl><div><dt>Original</dt><dd>12 min</dd></div><div><dt>Blink</dt><dd>{depth}</dd></div><div><dt>Published</dt><dd>Aug 14, 2025</dd></div></dl></div>
     <div className="resultTitle"><span>THE BLINK</span><h1>Apple’s quiet shift from devices to a services empire</h1><p>Apple’s new strategy is less about selling more devices and more about turning its installed base into dependable, recurring revenue.</p></div>
     <section className="sentence"><h2><span>01</span> In one sentence</h2><p>With hardware growth slowing, Apple is building a high-margin services layer around the two billion devices it has already sold.</p></section>
@@ -72,5 +72,5 @@ function Library({ onOpen }: { onOpen: () => void }) { return <main className="l
 export default function App() {
   const [view,setView]=useState<View>("home"); const [processing,setProcessing]=useState(false);
   const submit=()=>{setProcessing(true);setTimeout(()=>{setProcessing(false);setView("result")},2600)};
-  return <><Header view={view} setView={setView}/>{processing ? <ProcessingState/> : view==="home" ? <Home onSubmit={submit} onOpen={()=>setView("result")}/> : view==="library" ? <Library onOpen={()=>setView("result")}/> : <Result/>}<footer className="siteFooter"><Logo onClick={()=>setView("home")}/><span>Read less. Know more.</span><small>© 2025 Blink</small></footer></>;
+  return <><Header view={view} setView={setView}/>{processing ? <ProcessingState/> : view==="home" ? <Home onSubmit={submit} onOpen={()=>setView("result")}/> : view==="library" ? <Library onOpen={()=>setView("result")}/> : <Result onBack={()=>setView("home")}/>}<footer className="siteFooter"><Logo onClick={()=>setView("home")}/><span>Read less. Know more.</span><small>© 2025 Blink</small></footer></>;
 }
